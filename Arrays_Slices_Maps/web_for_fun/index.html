@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>To-Do List</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" />
+</head>
+<body>
+  <div class="container mt-5">
+    <h1 class="mb-4">To-Do List</h1>
+    <form id="todoForm">
+      <div class="input-group mb-3">
+        <input type="text" class="form-control" id="title" placeholder="Add new todo" required>
+        <button class="btn btn-primary" type="submit">Add</button>
+      </div>
+    </form>
+    <ul id="todoList" class="list-group">
+    </ul>
+  </div>
+
+  <script>
+    const apiUrl = 'http://localhost:8080/api/todos';
+
+    // Hàm tải todo từ server
+    function loadTodos() {
+      fetch(apiUrl)
+        .then(response => response.json())
+        .then(data => {
+          const todoList = document.getElementById('todoList');
+          todoList.innerHTML = '';
+          data.forEach(todo => {
+            const li = document.createElement('li');
+            li.classList.add('list-group-item');
+            li.innerHTML = `
+              <input type="checkbox" ${todo.done ? 'checked' : ''} onchange="toggleTodoDone(${todo.id}, this)">
+              ${todo.title}
+              <button class="btn btn-danger btn-sm float-end" onclick="deleteTodo(${todo.id})">Delete</button>
+            `;
+            todoList.appendChild(li);
+          });
+        });
+    }
+
+    // Hàm thêm todo mới
+    document.getElementById('todoForm').addEventListener('submit', function (e) {
+      e.preventDefault();
+      const title = document.getElementById('title').value;
+
+      fetch(apiUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ title, done: false })
+      })
+      .then(response => response.json())
+      .then(() => {
+        loadTodos();
+        document.getElementById('title').value = ''; // Clear input
+      });
+    });
+
+    // Hàm thay đổi trạng thái todo (done)
+    function toggleTodoDone(id, checkbox) {
+      fetch(`${apiUrl}/${id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ id, title: checkbox.parentElement.innerText.trim(), done: checkbox.checked })
+      })
+      .then(() => loadTodos());
+    }
+
+    // Hàm xóa todo
+    function deleteTodo(id) {
+      fetch(`${apiUrl}/${id}`, { method: 'DELETE' })
+        .then(() => loadTodos());
+    }
+
+    // Tải todos khi trang được load
+    loadTodos();
+  </script>
+</body>
+</html>
