@@ -2,6 +2,7 @@ package main
 
 // what we learn:
 // bufio
+// how to interact with file
 import (
 	"bufio"
 	"fmt"
