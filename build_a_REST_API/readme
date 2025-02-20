@@ -3,3 +3,10 @@ go get -u github.com/gin-gonic/gin
 
 SQLite 3
 go get github.com/mattn/go-sqlite3
+
+
+c complier to run cgo to enable C in Go to run sql
+sudo apt-get install build-essential
+
+Enable CGO 
+CGO_ENABLE=1 go build

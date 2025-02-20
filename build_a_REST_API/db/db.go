@@ -9,17 +9,21 @@ import (
 var DB *sql.DB
 
 func InitDB() {
-	DB, err := sql.Open("sqlite3", "api.db")
+	var err error
+	DB, err = sql.Open("sqlite3", "api.db")
 
 	if err != nil {
 		panic("Could not connect to database.")
 	}
+
 	DB.SetMaxOpenConns(10)
 	DB.SetMaxIdleConns(5)
-	CreateTables()
+
+	createTables()
 }
 
-func CreateTables() {
+func createTables() {
+	// Haven't instal
 	createEventsTable := `
 	CREATE TABLE IF NOT EXISTS events (
 		id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -32,6 +36,6 @@ func CreateTables() {
 	`
 	_, err := DB.Exec(createEventsTable)
 	if err != nil {
-		panic("Could not create event table!")
+		panic(err)
 	}
 }
