@@ -15,19 +15,19 @@ func InitDB() {
 		panic("Could not connect to database.")
 	}
 	DB.SetMaxOpenConns(10)
-	DB.SetConnMaxIdleTime(5)
+	DB.SetMaxIdleConns(5)
 	CreateTables()
 }
 
 func CreateTables() {
 	createEventsTable := `
-	CREATE TABLE IF NOT EXIST events (
-	id INTEGER PRYMARY KEY AUTOINCREMENT,
-	name TEXT NOT NULL,
-	description TEXT NOT NULL,
-	location TEXT NOT NULL,
-	dateTime DATETIME NOT NULL,
-	user_id INTEGER
+	CREATE TABLE IF NOT EXISTS events (
+		id INTEGER PRIMARY KEY AUTOINCREMENT,
+		name TEXT NOT NULL,
+		description TEXT NOT NULL,
+		location TEXT NOT NULL,
+		dateTime DATETIME NOT NULL,
+		user_id INTEGER
 	)
 	`
 	_, err := DB.Exec(createEventsTable)
