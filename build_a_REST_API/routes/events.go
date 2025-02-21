@@ -40,9 +40,9 @@ func updateEvents(context *gin.Context) {
 		return
 	}
 
-	event, err := models.GetEventById(eventId)
+	_, err = models.GetEventById(eventId)
 	if err != nil {
-		context.JSON(http.StatusInternalServerError, gin.H{"message": "Failed to get event by id"})
+		context.JSON(http.StatusInternalServerError, gin.H{"message": "Event doesn't exists"})
 		return
 	}
 
@@ -56,9 +56,8 @@ func updateEvents(context *gin.Context) {
 
 	updatedEvent.ID = eventId
 
-	err = models.UpdateEvents(eventId, event)
+	err = models.UpdateEvents(eventId, &updatedEvent)
 	if err != nil {
-		panic(err)
 		context.JSON(http.StatusAlreadyReported, gin.H{"message": "Failed to update event"})
 		return
 	}
@@ -73,14 +72,13 @@ func createEvents(context *gin.Context) {
 		return
 	}
 
-	event.ID = 1
 	event.UserID = 1
 
 	err = event.Save()
+
 	if err != nil {
-		// context.JSON(http.StatusInternalServerError, gin.H{"message": "Failed to save events"})
-		// context.JSON(http.StatusInternalServerError, gin.H{"message": err})
-		panic(err)
+		context.JSON(http.StatusInternalServerError, gin.H{"message": "Failed to save events"})
+		// panic(err)
 		return
 	}
 
