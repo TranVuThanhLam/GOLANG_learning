@@ -9,6 +9,27 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+func createEvent(context *gin.Context) {
+	event := models.Event{}
+	err := context.ShouldBindJSON(&event)
+	if err != nil {
+		context.JSON(http.StatusBadRequest, gin.H{"message": "Could not parse request data."})
+		return
+	}
+
+	event.UserID = 1
+
+	err = event.Save()
+
+	if err != nil {
+		context.JSON(http.StatusInternalServerError, gin.H{"message": "Failed to save events"})
+		// panic(err)
+		return
+	}
+
+	context.JSON(http.StatusCreated, gin.H{"message": "Event created!", "event: ": fmt.Sprint(event)})
+}
+
 func getEventById(context *gin.Context) {
 	eventId, err := strconv.ParseInt(context.Param("id"), 10, 64)
 	if err != nil {
@@ -62,27 +83,6 @@ func updateEvent(context *gin.Context) {
 		return
 	}
 	context.JSON(http.StatusOK, gin.H{"message": "update successful"})
-}
-
-func createEvent(context *gin.Context) {
-	event := models.Event{}
-	err := context.ShouldBindJSON(&event)
-	if err != nil {
-		context.JSON(http.StatusBadRequest, gin.H{"message": "Could not parse request data."})
-		return
-	}
-
-	event.UserID = 1
-
-	err = event.Save()
-
-	if err != nil {
-		context.JSON(http.StatusInternalServerError, gin.H{"message": "Failed to save events"})
-		// panic(err)
-		return
-	}
-
-	context.JSON(http.StatusCreated, gin.H{"message": "Event created!", "event: ": fmt.Sprint(event)})
 }
 
 func deleteEvent(context *gin.Context) {
