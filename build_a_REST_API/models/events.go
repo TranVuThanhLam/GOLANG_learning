@@ -34,15 +34,16 @@ func (e Event) Save() error {
 	defer stmt.Close()
 
 	// da tung thieu user ID
-	result, err := stmt.Exec(e.Name, e.Description, e.Location, e.DateTime, e.UserID)
+	// thay k can thiet nen k nhan result
+	_, err = stmt.Exec(e.Name, e.Description, e.Location, e.DateTime, e.UserID)
 
 	if err != nil {
 		return err
 	}
 
-	id, err := result.LastInsertId()
-
-	e.ID = id
+	// thay k can thiet nen cmt
+	// id, err := result.LastInsertId()
+	// e.ID = id
 
 	// result.LastInsertId()
 
@@ -108,5 +109,26 @@ func UpdateEvents(id int64, event *Event) error {
 		return errors.New("Failed to exec query")
 	}
 	// van chua hieu vi sao truyen thieu user id ma van cahy dc
+	return nil
+}
+
+func (event Event) DeleteEvent() error {
+	query := `
+	DELETE FROM events 
+	WHERE id = ?
+	`
+	stmt, err := db.DB.Prepare(query)
+	if err != nil {
+		return errors.New("Couldn't prepare stmt")
+	}
+
+	defer stmt.Close()
+
+	_, err = stmt.Exec(event.ID)
+
+	if err != nil {
+		return errors.New("Couldn't execute DELETE statement")
+	}
+
 	return nil
 }

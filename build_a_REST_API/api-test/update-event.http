@@ -1,4 +1,4 @@
-PUT  http://localhost:8080/event_update/1
+PUT  http://localhost:8080/event_3
 content-type: application/json
 
 {
