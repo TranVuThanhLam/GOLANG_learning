@@ -15,10 +15,22 @@ func main() {
 	server := gin.Default()
 
 	server.GET("/events", getEvents)
+	server.GET("/event_by_id_:id", getEventById)
+
 	server.POST("/events", createEvents)
 
 	server.Run()
 
+}
+
+func getEventById(context *gin.Context) {
+	id := context.Param("id")
+	event, err := models.GetEventById(id)
+	if err != nil {
+		context.JSON(http.StatusInternalServerError, gin.H{"message": "Failed to get all event"})
+		return
+	}
+	context.JSON(http.StatusOK, event)
 }
 
 func getEvents(context *gin.Context) {

@@ -49,6 +49,28 @@ func (e Event) Save() error {
 	return err
 }
 
+func GetEventById(id string) ([]Event, error) {
+	query := "SELECT * FROM events WHERE id = ?"
+	rows, err := db.DB.Query(query, id)
+	if err != nil {
+		return nil, err
+	}
+
+	var events []Event
+
+	for rows.Next() {
+		var event Event
+		err = rows.Scan(&event.ID, &event.Name, &event.Description, &event.Location, &event.DateTime, &event.UserID)
+
+		if err != nil {
+			return nil, errors.New("Can't reading data!")
+		}
+
+		events = append(events, event)
+	}
+	return events, nil
+}
+
 func GetAllEvents() ([]Event, error) {
 	query := "SELECT * FROM events"
 	rows, err := db.DB.Query(query)
