@@ -2,8 +2,8 @@ POST http://localhost:8080/events
 content-type: application/json
 
 {
-    "name" : "test event",
-    "description" : "A test event",
-    "location" : "A test location",
+    "name" : "test event NEW",
+    "description" : "A test event NEW",
+    "location" : "A test location NEW",
     "dateTime" : "2025-01-01T02:30:00.000Z"
 }

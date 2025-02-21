@@ -49,26 +49,18 @@ func (e Event) Save() error {
 	return err
 }
 
-func GetEventById(id string) ([]Event, error) {
+func GetEventById(id int64) (*Event, error) {
 	query := "SELECT * FROM events WHERE id = ?"
-	rows, err := db.DB.Query(query, id)
+	row := db.DB.QueryRow(query, id)
+
+	var event Event
+	err := row.Scan(&event.ID, &event.Name, &event.Description, &event.Location, &event.DateTime, &event.UserID)
+
 	if err != nil {
-		return nil, err
+		return nil, errors.New("Can't reading data!")
 	}
 
-	var events []Event
-
-	for rows.Next() {
-		var event Event
-		err = rows.Scan(&event.ID, &event.Name, &event.Description, &event.Location, &event.DateTime, &event.UserID)
-
-		if err != nil {
-			return nil, errors.New("Can't reading data!")
-		}
-
-		events = append(events, event)
-	}
-	return events, nil
+	return &event, nil
 }
 
 func GetAllEvents() ([]Event, error) {
@@ -91,4 +83,30 @@ func GetAllEvents() ([]Event, error) {
 		events = append(events, event)
 	}
 	return events, nil
+}
+
+func UpdateEvents(id int64, event *Event) error {
+	query := `
+	UPDATE events
+	SET name = ?, description = ?, location = ?, dateTime = ?
+	WHERE id = ?
+	`
+	stmt, err := db.DB.Prepare(query)
+
+	if err != nil {
+		return err
+	}
+
+	defer stmt.Close()
+
+	_, err = stmt.Exec(event.Name,
+		event.Description,
+		event.Location,
+		event.DateTime,
+		event.ID)
+	if err != nil {
+		return errors.New("Failed to exec query")
+	}
+	// van chua hieu vi sao truyen thieu user id ma van cahy dc
+	return nil
 }
