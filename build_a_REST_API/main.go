@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"net/http"
 
 	"example.com/web/db"
@@ -42,9 +43,11 @@ func createEvents(context *gin.Context) {
 
 	err = event.Save()
 	if err != nil {
-		context.JSON(http.StatusInternalServerError, gin.H{"message": "Failed to save events"})
+		// context.JSON(http.StatusInternalServerError, gin.H{"message": "Failed to save events"})
+		// context.JSON(http.StatusInternalServerError, gin.H{"message": err})
+		panic(err)
 		return
 	}
 
-	context.JSON(http.StatusCreated, gin.H{"message": "Event created!", "event: ": event})
+	context.JSON(http.StatusCreated, gin.H{"message": "Event created!", "event: ": fmt.Sprint(event)})
 }
