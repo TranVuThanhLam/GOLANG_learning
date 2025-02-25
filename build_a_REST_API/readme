@@ -10,3 +10,9 @@ sudo apt-get install build-essential
 
 Enable CGO 
 CGO_ENABLE=1 go build
+
+Bcrypt (hash password)
+go get -u golang.org/x/crypto
+
+JWT json web token
+go get -u github.com/golang-jwt/jwt/v5
