@@ -2,6 +2,6 @@ POST http://localhost:8080/login
 content-type: appllication/json
 
 {
-    "email" : "example2@gmail.com",
+    "email" : "tao-day-may-hihi-haha@gmail.com",
     "password" : "123123123"
 }

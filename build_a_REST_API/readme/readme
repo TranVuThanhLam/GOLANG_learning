@@ -1,0 +1,12 @@
+API web structure: 
+
+Routes
+    routes : navigate
+
+
+utils
+    hash password
+    jwt
+
+
+Middleware

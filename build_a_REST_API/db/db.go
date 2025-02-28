@@ -52,6 +52,21 @@ func createTables() {
 		panic(err)
 	}
 
+	createRegistrationsTable := `
+	CREATE TABLE IF NOT EXISTS registrations (
+	id INTEGER PRIMARY KEY AUTOINCREMENT,
+	event_id INTEGER,
+	user_id INTEGER,
+	FOREIGN KEY(event_id) REFERENCES events(id),
+	FOREIGN KEY(user_id) REFERENCES users(id)
+	)
+	`
+
+	_, err = DB.Exec(createRegistrationsTable)
+	if err != nil {
+		panic(err)
+	}
+
 	// xoa table
 	// _, err := DB.Exec("DROP TABLE events")
 	// if err != nil {
