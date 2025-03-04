@@ -31,3 +31,6 @@ func TestDivide(t *testing.T) {
 		}
 	}
 }
+
+// maybe la phai dung goland moi dung dc lenh nay
+// go test -coverprofile=coverage.out && go tool cover -html=coverage.out
