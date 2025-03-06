@@ -8,6 +8,7 @@ import (
 	"path/filepath"
 
 	"modern_web.com/pkg/config"
+	"modern_web.com/pkg/models"
 )
 
 // filepath.Glob()
@@ -23,7 +24,7 @@ func NewTemplates(a *config.AppConfig) {
 
 }
 
-func RenderTemplate(w http.ResponseWriter, tmpl string) {
+func RenderTemplate(w http.ResponseWriter, tmpl string, td *models.TemplateData) {
 	var tc map[string]*template.Template
 	if app.UseCache {
 		tc = app.TemplateCache
@@ -38,7 +39,12 @@ func RenderTemplate(w http.ResponseWriter, tmpl string) {
 
 	buf := new(bytes.Buffer)
 
-	err := t.Execute(buf, nil)
+	// Ensure td is not nil
+	if td == nil {
+		td = &models.TemplateData{}
+	}
+
+	err := t.Execute(buf, td) // Pass td instead of nil
 	if err != nil {
 		log.Fatal(err)
 	}
