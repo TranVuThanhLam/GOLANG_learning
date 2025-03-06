@@ -3,13 +3,29 @@ package handlers
 import (
 	"net/http"
 
+	"modern_web.com/pkg/config"
 	"modern_web.com/pkg/render"
 )
 
-func Home(w http.ResponseWriter, r *http.Request) {
-	render.RenderTemplate(w, "test.page.html")
+var Repo *Repository
+
+type Repository struct {
+	App *config.AppConfig
 }
 
-// func About(w http.ResponseWriter, r *http.Request) {
-// 	render.RenderTemplate(w, "about.page.tmpl")
-// }
+func NewRepo(a *config.AppConfig) *Repository {
+	return &Repository{
+		App: a,
+	}
+}
+
+func NewHandlers(r *Repository) {
+	Repo = r
+}
+
+func (m *Repository) Home(w http.ResponseWriter, r *http.Request) {
+	render.RenderTemplate(w, "home.page")
+}
+func (m *Repository) About(w http.ResponseWriter, r *http.Request) {
+	render.RenderTemplate(w, "about.page")
+}

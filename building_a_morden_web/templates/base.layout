@@ -19,7 +19,7 @@
 
         {{end}}
 
-        {{block "js"}}
+        {{block "js" .}}
 
         {{end}}
 

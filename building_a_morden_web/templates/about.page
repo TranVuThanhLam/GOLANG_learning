@@ -1,10 +1,12 @@
-{{define "base"}}
+{{template "base"}}
 
-{{template "content"}}
+{{define "content"}}
     <div class="container">
         <div class="row">
             <div class="col">
                 <h1>this is about page</h1>
+                <p>this is a paragrap</p>
+                <p>this is a paragrap</p>
             </div>
         </div>
     </div>
