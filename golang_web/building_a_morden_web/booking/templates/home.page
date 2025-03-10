@@ -1,0 +1,13 @@
+{{template "base" .}}
+
+{{define "content"}}
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                <h1>this is home page</h1>
+                <p>this is some text</p>
+                <img src="static/images/house.jpg" height="1000" width="auto" alt="">
+            </div>
+        </div>
+    </div>
+{{end}}
