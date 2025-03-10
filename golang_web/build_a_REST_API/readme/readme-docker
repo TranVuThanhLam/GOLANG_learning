@@ -1,9 +1,0 @@
-----------------------
-DOCKER
-
-# build docker IMAGE
-docker build -t my-golang-api-web .
-
-# buid CONTAINER
-# --rm will delete container after it shutdown
-docker run --rm -p 8080:8080 my-golang-api-web

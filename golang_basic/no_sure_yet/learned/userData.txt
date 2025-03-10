@@ -1,3 +1,0 @@
-Revernue: 10
-Expenses: 20
-Tax: 20
