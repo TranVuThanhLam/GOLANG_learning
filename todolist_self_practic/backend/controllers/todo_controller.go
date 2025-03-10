@@ -1,7 +1,7 @@
 package controllers
 
 import (
-	"net/http" // <- Corrected import statement
+	"net/http"
 	"todolist/config"
 	"todolist/models"
 
@@ -10,8 +10,23 @@ import (
 
 // Lấy danh sách To-Do
 func GetTodos(c *gin.Context) {
+	rows, err := config.DB.Query("SELECT id, title, status FROM todos")
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	defer rows.Close()
+
 	var todos []models.Todo
-	config.DB.Find(&todos)
+	for rows.Next() {
+		var todo models.Todo
+		if err := rows.Scan(&todo.ID, &todo.Title, &todo.Status); err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+			return
+		}
+		todos = append(todos, todo)
+	}
+
 	c.JSON(http.StatusOK, todos)
 }
 
@@ -22,7 +37,20 @@ func CreateTodo(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-	config.DB.Create(&todo)
+
+	result, err := config.DB.Exec("INSERT INTO todos (title, status) VALUES (?, ?)", todo.Title, todo.Status)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	id, err := result.LastInsertId()
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	todo.ID = uint(id)
+
 	c.JSON(http.StatusOK, todo)
 }
 
@@ -31,30 +59,28 @@ func UpdateTodo(c *gin.Context) {
 	var todo models.Todo
 	id := c.Param("id")
 
-	if err := config.DB.First(&todo, id).Error; err != nil {
-		c.JSON(http.StatusNotFound, gin.H{"error": "To-Do not found"})
-		return
-	}
-
 	if err := c.ShouldBindJSON(&todo); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	config.DB.Save(&todo)
+	_, err := config.DB.Exec("UPDATE todos SET title = ?, status = ? WHERE id = ?", todo.Title, todo.Status, id)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
 	c.JSON(http.StatusOK, todo)
 }
 
 // Xóa To-Do
 func DeleteTodo(c *gin.Context) {
-	var todo models.Todo
 	id := c.Param("id")
-
-	if err := config.DB.First(&todo, id).Error; err != nil {
-		c.JSON(http.StatusNotFound, gin.H{"error": "To-Do not found"})
+	_, err := config.DB.Exec("DELETE FROM todos WHERE id = ?", id)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 
-	config.DB.Delete(&todo)
 	c.JSON(http.StatusOK, gin.H{"message": "To-Do deleted"})
 }

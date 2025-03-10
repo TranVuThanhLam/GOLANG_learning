@@ -2,7 +2,6 @@ package main
 
 import (
 	"todolist/config"
-	"todolist/models"
 	"todolist/routes"
 
 	"github.com/gin-contrib/cors"
@@ -11,14 +10,16 @@ import (
 
 func main() {
 	config.ConnectDB()
-	config.DB.AutoMigrate(&models.Todo{})
 
-	r := gin.Default()
+	config.InitDB()
+
+	// khoi tao routera
+	router := gin.Default()
 
 	// Middleware CORS để React có thể kết nối
-	r.Use(cors.Default())
+	router.Use(cors.Default())
 
-	routes.TodoRoutes(r)
+	routes.TodoRoutes(router)
 
-	r.Run(":8080")
+	router.Run(":8080")
 }
