@@ -1,0 +1,121 @@
+1. Cài đặt Docker trên Ubuntu
+
+Trước tiên, bạn cần cài đặt Docker trên Ubuntu nếu chưa có. Bạn có thể làm theo các bước sau:
+
+# Cập nhật các gói phần mềm
+sudo apt update
+
+# Cài đặt các gói phụ thuộc
+sudo apt install apt-transport-https ca-certificates curl software-properties-common
+
+# Thêm kho lưu trữ Docker GPG
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+
+# Thêm kho lưu trữ Docker
+echo "deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+
+# Cập nhật lại các gói phần mềm
+sudo apt update
+
+# Cài đặt Docker
+sudo apt install docker-ce
+
+# Kiểm tra Docker đã được cài đặt thành công chưa
+sudo docker --version
+
+Nếu bạn muốn sử dụng Docker mà không cần phải thêm sudo mỗi lần, bạn có thể thêm user của mình vào nhóm docker:
+
+sudo usermod -aG docker $USER
+
+Sau đó, đăng xuất và đăng nhập lại.
+2. Tạo Dockerfile cho dự án Golang
+
+Giả sử bạn có một dự án Golang có cấu trúc như sau:
+
+/my-golang-project
+  ├── main.go
+  ├── go.mod
+  └── go.sum
+
+Tạo một file có tên Dockerfile trong thư mục gốc của dự án với nội dung như sau:
+
+# Chọn image Golang chính thức
+FROM golang:1.20-alpine AS builder
+
+# Set thư mục làm việc trong container
+WORKDIR /app
+
+# Sao chép các file Go và module
+COPY go.mod go.sum ./
+RUN go mod tidy
+
+# Sao chép mã nguồn
+COPY . .
+
+# Biên dịch ứng dụng Go
+RUN go build -o myapp .
+
+# Tạo image cuối cùng (chạy ứng dụng)
+FROM alpine:latest
+
+# Cài đặt thư viện cần thiết
+RUN apk --no-cache add ca-certificates
+
+# Sao chép ứng dụng từ container builder vào container chạy ứng dụng
+COPY --from=builder /app/myapp /myapp
+
+# Định nghĩa lệnh chạy container
+ENTRYPOINT ["/myapp"]
+
+3. Xây dựng và chạy Docker image**************
+
+Sau khi tạo Dockerfile, bạn có thể xây dựng Docker image và chạy nó trong một container.
+
+   ------------ Xây dựng Docker image:
+
+Trong thư mục chứa Dockerfile, sử dụng lệnh sau để xây dựng Docker image:
+
+*
+docker build -t my-golang-app .
+*
+
+    --------------- Chạy Docker container:
+
+Sau khi image đã được xây dựng, bạn có thể chạy container từ image đó:
+
+*
+docker run --rm my-golang-app
+*
+
+Lệnh này sẽ tạo ra một container mới từ image my-golang-app và chạy ứng dụng Golang trong container.
+4. Cấu hình Docker Compose (tùy chọn)
+
+Nếu bạn muốn sử dụng Docker Compose để dễ dàng quản lý nhiều dịch vụ, bạn có thể tạo một file docker-compose.yml trong thư mục gốc của dự án:
+
+version: '3'
+services:
+  golang-app:
+    build: .
+    container_name: golang_app
+    ports:
+      - "8080:8080" # Nếu ứng dụng của bạn cần ánh xạ cổng
+
+Để xây dựng và chạy container với Docker Compose, sử dụng lệnh sau:
+
+docker-compose up --build
+
+5. Kiểm tra ứng dụng
+
+Sau khi container đang chạy, bạn có thể truy cập ứng dụng của mình qua cổng mà bạn đã cấu hình trong Docker Compose (nếu có). Nếu không sử dụng Docker Compose, bạn có thể chạy trực tiếp từ Docker bằng lệnh:
+
+docker run -p 8080:8080 my-golang-app
+
+Sau đó, mở trình duyệt và truy cập http://localhost:8080 (hoặc cổng bạn đã ánh xạ) để kiểm tra ứng dụng.
+Tổng kết
+
+Như vậy, bạn đã biết cách sử dụng Docker với dự án Golang trên Ubuntu Linux. Các bước bao gồm:
+
+    Cài đặt Docker.
+    Tạo Dockerfile để cấu hình cách xây dựng ứng dụng Golang.
+    Sử dụng Docker để xây dựng và chạy ứng dụng trong container.
+    (Tùy chọn) Sử dụng Docker Compose để dễ dàng quản lý container.

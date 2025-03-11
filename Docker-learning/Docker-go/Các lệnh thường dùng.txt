@@ -1,0 +1,8 @@
+Các lệnh thường dùng: 
+
+**
+docker ps -a
+
+docker build -t my-golang-app .
+
+docker run --rm -p 3000:3000 <tên app>

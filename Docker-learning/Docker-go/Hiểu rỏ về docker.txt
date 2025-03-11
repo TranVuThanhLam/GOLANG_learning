@@ -1,0 +1,42 @@
+Hiểu rỏ về docker
+
+--------------trong lệnh------------------
+
+docker run --rm -p 3000:3000 my-golang-api-web
+
+-p : là tiền tố dùng để docker hiểu là nó cần phải ÁNH XẠ ra môi trường bên ngoài,
+
+--rm : xóa container sau khi container shutdown
+
+8080:8080 : là cổng muốn ánh xạ
+--------------------------------------------
+
+---------------Container có gì--------------------
++ Code
++ OS (Operating System)
++ Dependence Enviroment (Node js, gcc, react, golang version ...)
+
+-------------------Cách để đóng gói trong Docker-------------
+Bản chất là từ container đang chạy đóng gói thành image sau đó gửi đi
+	Có 2 cách để gửi:
+1. Đẩy Image lên Docker Hub (hoặc registry khác)
+2. Gửi Docker Image Dưới Dạng File
+	-------------------------------
+	Xuất Docker image thành file tar:
+
+docker save -o my-golang-api-web-image.tar my-golang-api-web-image
+
+Lệnh này sẽ tạo một file tarball chứa Docker image.
+
+Gửi file .tar cho người khác (ví dụ qua email, FTP, hoặc lưu trữ trên cloud).
+
+Nhập Docker image từ file tar: Khi người nhận nhận được file .tar, họ có thể nhập (load) Docker image vào Docker của họ bằng lệnh:
+
+docker load -i my-golang-api-web-image.tar
+
+Chạy container từ image:
+
+Sau khi đã nhập image, người nhận có thể chạy container giống như khi họ tải từ Docker Hub:
+
+docker run -p 8080:8080 my-golang-api-web-image
+		----------------------------
