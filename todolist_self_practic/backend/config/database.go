@@ -31,4 +31,16 @@ func InitDB() {
 	if err != nil {
 		log.Fatal("Failed to create table: ", err)
 	}
+
+	// Create the todos table if it doesn't exist
+	_, err = DB.Exec(`CREATE TABLE IF NOT EXISTS users (
+		id INTEGER PRIMARY KEY AUTOINCREMENT,
+		name TEXT NOT NULL,
+		email TEXT NOT NULL,
+		password TEXT NOT NULL,
+		role TEXT NOT NULL
+	)`)
+	if err != nil {
+		log.Fatal("Failed to create table: ", err)
+	}
 }

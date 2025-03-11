@@ -6,9 +6,15 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func TodoRoutes(r *gin.Engine) {
-	r.GET("/todos", controllers.GetTodos)
-	r.POST("/todos", controllers.CreateTodo)
-	r.PUT("/todos/:id", controllers.UpdateTodo)
-	r.DELETE("/todos/:id", controllers.DeleteTodo)
+func TodoRoutes(router *gin.Engine) {
+	router.GET("/todos", controllers.GetTodos)
+	router.POST("/todos", controllers.CreateTodo)
+	router.PUT("/todos/:id", controllers.UpdateTodo)
+	router.DELETE("/todos/:id", controllers.DeleteTodo)
+
+	router.GET("/users", controllers.GetUsers)
+	router.POST("/signup", controllers.CreateUser)
+	router.POST("/login", controllers.Login)
+	// router.PUT("/users/:id", controllers.UpdateUser)
+	// router.DELETE("/users/:id", controllers.DeleteUser)
 }
