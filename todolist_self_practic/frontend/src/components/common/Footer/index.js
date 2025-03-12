@@ -1,8 +1,10 @@
 function Footer() {
   return (
-    <footer className="footer">
-      <div className="container">
-        <p>&copy; 2021 All rights reserved.</p>
+    <footer class="footer mt-auto py-3 bg-body-tertiary fixed-bottom">
+      <div class="container">
+        <span class="text-body-secondary">
+          &copy; 2021 All rights reserved.
+        </span>
       </div>
     </footer>
   );
