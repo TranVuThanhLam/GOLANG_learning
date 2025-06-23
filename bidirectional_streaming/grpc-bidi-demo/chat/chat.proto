@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+package chat;
+
+option go_package = "example.com/grpcbidi/pkg/chat;chat";
+service ChatService {
+  rpc Chat(stream ChatMessage) returns (stream ChatMessage);
+}
+
+message ChatMessage {
+  string message = 1;
+}
