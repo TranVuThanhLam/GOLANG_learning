@@ -13,6 +13,6 @@ func main() {
 
 	routes.RegisterRouter(server)
 
-	server.Run()
+	server.Run(":8234")
 
 }
