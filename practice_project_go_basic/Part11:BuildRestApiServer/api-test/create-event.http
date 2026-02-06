@@ -1,0 +1,10 @@
+POST http://localhost:8080/events
+content-type: application/json
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6IlRlc3RFbWFpbEBnbWFpbC5jb20iLCJleHAiOjE3NzAyMDQxNTQsInVzZXJJZCI6MX0.SODPSYiv3ACp8HH4N2vzgEP0QoZIgJY8IStQ9aGkNkk
+
+{
+    "name" : "The first event",
+    "description" : "This is some description",
+    "location" : "Da Nang city",
+    "dateTime": "2026-02-02T13:59:30.000Z"
+}
