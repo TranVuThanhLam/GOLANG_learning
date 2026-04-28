@@ -1,0 +1,15 @@
+{
+  "mcpServers": {
+    "basic_mcp_server": {
+      "command": "uv",
+      "args": [
+        "run",
+        "--with",
+        "fastmcp",
+        "fastmcp",
+        "run",
+        "/home/gmo/Tran_Vu_Thanh_Lam/AI_gemini_CLI_call_MCP/basic_mcp_server.py"
+      ]
+    }
+  }
+}

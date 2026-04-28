@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "@google/gemini-cli": "^0.8.1",
+    "express": "^5.1.0"
+  }
+}

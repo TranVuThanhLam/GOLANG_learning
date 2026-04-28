@@ -1,0 +1,3 @@
+product_sku,category_code,warehouse_code,quantity,transaction_type
+IP15,ELEC,HN,10,IN
+TS01,FASH,HCM,-2,OUT

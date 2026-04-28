@@ -1,0 +1,39 @@
+services:
+  mysql-db:
+    image: mysql:8.4
+    container_name: mysql_server
+    # restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root_password_123
+      MYSQL_DATABASE: ban_hang_db
+      MYSQL_USER: admin
+      MYSQL_PASSWORD: user_password_123
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./init:/docker-entrypoint-initdb.d
+    networks:
+      - mysql_network
+
+  phpmyadmin:
+    image: phpmyadmin:latest
+    container_name: pma_gui
+    # restart: always
+    environment:
+      PMA_HOST: mysql-db
+      PMA_PORT: 3306
+      PMA_ARBITRARY: 1
+    ports:
+      - "8080:80"
+    depends_on:
+      - mysql-db
+    networks:
+      - mysql_network
+
+volumes:
+  mysql_data:
+
+networks:
+  mysql_network:
+    driver: bridge
